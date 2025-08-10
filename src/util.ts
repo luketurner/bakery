@@ -5,7 +5,7 @@ export function getPackageJson() {
 }
 
 export function updatePackageJson(newJson: any) {
-  return writeFileSync("package.json", JSON.stringify(newJson), "utf-8");
+  return writeFileSync("package.json", JSON.stringify(newJson, null, 2) + "\n", "utf-8");
 }
 
 export function getCurrentVersion() {
