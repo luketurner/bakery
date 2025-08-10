@@ -33,18 +33,19 @@ export async function init(options: { skipInstall: boolean }) {
   if (!packageJson) {
     throw new Error("Invalid package.json");
   }
-  if (packageJson.scripts?.bakery) {
-    return;
+  if (!packageJson.scripts?.bakery) {
+    console.log("Adding bakery command to package.json...");
+    if (!packageJson.scripts) {
+      packageJson.scripts = {};
+    }
+    packageJson.scripts.bakery = "bakery";
+    updatePackageJson(packageJson);
   }
-  console.log("Adding bakery command to package.json...");
-  if (!packageJson.scripts) {
-    packageJson.scripts = {};
-  }
-  packageJson.scripts.bakery = "bakery";
-  updatePackageJson(packageJson);
 
   if (!existsSync(".github/workflows/publish.yml")) {
     console.log("Creating github workflow...");
-    writeFileSync(".github/workflows/publish.yml", actionYaml, "utf-8");
+    await Bun.write(".github/workflows/publish.yml", actionYaml, {
+      createPath: true,
+    });
   }
 }
