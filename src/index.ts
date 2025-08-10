@@ -2,6 +2,7 @@ import { program } from "commander";
 import { build } from "./build";
 import { release } from "./release";
 import { version } from "./version";
+import { init } from "./init";
 
 program
   .name("bakery")
@@ -11,6 +12,15 @@ program
     "Location of changelog file",
     "CHANGELOG.md",
   );
+
+program
+  .command("init")
+  .description("Set up project")
+  .option("--skip-install", "Skip automatic bakery installation", false)
+
+  .action(async function ({ skipInstall }: { skipInstall: string }) {
+    await init({ skipInstall });
+  });
 
 program
   .command("version")

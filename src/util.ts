@@ -1,9 +1,15 @@
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
+
+export function getPackageJson() {
+  return JSON.parse(readFileSync("package.json", "utf-8"));
+}
+
+export function updatePackageJson(newJson: any) {
+  return writeFileSync("package.json", JSON.stringify(newJson), "utf-8");
+}
 
 export function getCurrentVersion() {
-  const currentVersion = JSON.parse(
-    readFileSync("package.json", "utf-8"),
-  )?.version;
+  const currentVersion = getPackageJson()?.version;
   if (!currentVersion) {
     throw new Error("Must specify version in package.json");
   }
