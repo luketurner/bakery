@@ -1,13 +1,10 @@
-/**
- * Construcs a Github release, if appropriate.
- */
-
 import { $ } from "bun";
-import packageJson from "../package.json";
 import { readFile } from "fs/promises";
+import { getCurrentVersion } from "./util";
 
-export async function release(): Promise<void> {
-  const tag = `v${packageJson.version}`;
+export async function release(options: { changelog: string; outdir: string; }): Promise<void> {
+  const currentVersion = getCurrentVersion()
+  const tag = `v${currentVersion}`;
 
   console.log(`Creating release for ${tag}...`);
 
@@ -24,8 +21,8 @@ export async function release(): Promise<void> {
     return;
   }
 
-  const notes = (await readFile("CHANGELOG.md", "utf-8")).split("\n---\n")[0];
+  const notes = (await readFile(options.changelog, "utf-8")).split("\n---\n")[0];
 
   // release doesn't exist -- create it!
-  await $`gh release create ${tag} --verify-tag --notes ${notes} -- dist/*.tar.gz dist/*.zip`;
+  await $`gh release create ${tag} --verify-tag --notes ${notes} -- ${options.outdir}/*.tar.gz ${options.outdir}/*.zip`;
 }

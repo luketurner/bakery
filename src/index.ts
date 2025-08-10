@@ -4,14 +4,25 @@ import { release } from "./release";
 import { version } from "./version";
 
 program
+  .option("-o, --outdir <dir>", "Output directory for binaries, etc.", "dist")
+  .option(
+    "--changelog <changelog>",
+    "Location of changelog file",
+    "CHANGELOG.md"
+  );
+
+program
   .command("version")
   .description("Publish a new version")
   .argument(
     "<version>",
-    "Version number (e.g., 2.3.0) or increment type (major, minor, patch)",
+    "Version number (e.g., 2.3.0) or increment type (major, minor, patch)"
   )
-  .action(async (versionArg: string) => {
-    await version(versionArg);
+  .action(async function (versionArg: string) {
+    const { changelog } = this.parent?.opts()!;
+    await version(versionArg, {
+      changelog,
+    });
   });
 
 program
@@ -19,17 +30,19 @@ program
   .description("Build single-file executable(s)")
   .option(
     "-t, --target <target>",
-    "Specific target to build (e.g., bun-linux-x64)",
+    "Specific target to build (e.g., bun-linux-x64)"
   )
-  .action(async (options: { target?: string }) => {
-    await build(options.target);
+  .action(async function ({ target }: { target?: string }) {
+    const { outdir } = this.parent?.opts()!;
+    await build({ outdir, target });
   });
 
 program
   .command("release")
   .description("Create release in Github")
-  .action(async () => {
-    await release();
+  .action(async function() {
+    const { changelog, outdir } = this.parent?.opts()!;
+    await release({ changelog, outdir });
   });
 
-program.parseAsync();
+const cmd = await program.parseAsync();

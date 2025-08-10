@@ -1,17 +1,6 @@
 import { $ } from "bun";
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import { join } from "path";
-import packageJson from "../package.json";
-
-const CHANGELOG_PATH = join(import.meta.dir, "..", "CHANGELOG.md");
-
-function printUsage() {
-  console.log("Usage: bun scripts/version.ts <VERSION|major|minor|patch>");
-  console.log("  VERSION: A specific version number (e.g., 2.3.0)");
-  console.log("  major: Increment major version (e.g., 2.2.1 -> 3.0.0)");
-  console.log("  minor: Increment minor version (e.g., 2.2.1 -> 2.3.0)");
-  console.log("  patch: Increment patch version (e.g., 2.2.1 -> 2.2.2)");
-}
+import { getCurrentVersion } from "./util";
 
 function parseVersion(version: string): {
   major: number;
@@ -36,7 +25,7 @@ function parseVersion(version: string): {
 
 function calculateNewVersion(
   currentVersion: string,
-  versionInput: string,
+  versionInput: string
 ): string {
   if (
     versionInput === "major" ||
@@ -60,16 +49,12 @@ function calculateNewVersion(
   return versionInput;
 }
 
-function getCurrentVersion(): string {
-  return packageJson.version;
-}
-
-function insertChangelogEntry(newVersion: string) {
-  if (!existsSync(CHANGELOG_PATH)) {
-    throw new Error("CHANGELOG.md not found");
+function insertChangelogEntry(newVersion: string, changelogPath: string) {
+  if (!existsSync(changelogPath)) {
+    throw new Error(`${changelogPath} not found`);
   }
 
-  const changelog = readFileSync(CHANGELOG_PATH, "utf-8");
+  const changelog = readFileSync(changelogPath, "utf-8");
   const lines = changelog.split("\n");
 
   // Find where to insert the new entry (after the first # Changelog line)
@@ -82,7 +67,7 @@ function insertChangelogEntry(newVersion: string) {
   }
 
   if (insertIndex === -1) {
-    throw new Error("Could not find '# Changelog' header in CHANGELOG.md");
+    throw new Error("Could not find '# Changelog' header in changelog.");
   }
 
   // Get today's date in YYYY-MM-DD format
@@ -95,36 +80,13 @@ function insertChangelogEntry(newVersion: string) {
   lines.splice(insertIndex, 0, ...newEntry);
 
   // Write back to the file
-  writeFileSync(CHANGELOG_PATH, lines.join("\n"));
+  writeFileSync(changelogPath, lines.join("\n"));
 }
 
-async function openEditor() {
-  const editor = process.env.EDITOR || "vim";
-
-  console.log(`Opening ${CHANGELOG_PATH} in ${editor}...`);
-
-  // Open the editor and wait for it to close
-  await $`${editor} ${CHANGELOG_PATH}`;
-}
-
-async function executeGitCommands(newVersion: string) {
-  console.log("Adding CHANGELOG.md to git...");
-  await $`git add ${CHANGELOG_PATH}`;
-
-  console.log(`Creating commit for version ${newVersion}...`);
-  await $`git commit -m "update changelog for ${newVersion}"`;
-
-  console.log(`Updating package version to ${newVersion}...`);
-  await $`bun pm version ${newVersion}`;
-
-  console.log(`Pushing tag v${newVersion}...`);
-  await $`git push origin tag v${newVersion}`;
-
-  console.log("Pushing to main branch...");
-  await $`git push origin main`;
-}
-
-export async function version(versionInput: string): Promise<void> {
+export async function version(
+  versionInput: string,
+  { changelog: changelogPath }: { changelog: string }
+): Promise<void> {
   try {
     const currentVersion = getCurrentVersion();
     const newVersion = calculateNewVersion(currentVersion, versionInput);
@@ -133,23 +95,40 @@ export async function version(versionInput: string): Promise<void> {
     console.log(`New version: ${newVersion}`);
 
     // Insert the changelog template
-    insertChangelogEntry(newVersion);
+    insertChangelogEntry(newVersion, changelogPath);
     console.log("Added changelog template");
 
     // Open editor for user to edit changelog
-    await openEditor();
+    const editor = process.env.EDITOR || "vim";
+
+    console.log(`Opening ${changelogPath} in ${editor}...`);
+
+    // Open the editor and wait for it to close
+    await $`${editor} ${changelogPath}`;
 
     // Check if the user actually added content to the changelog
-    const changelog = readFileSync(CHANGELOG_PATH, "utf-8");
+    const changelog = readFileSync(changelogPath, "utf-8");
     if (changelog.includes(`## ${newVersion}`) && changelog.includes("- \n")) {
       console.error(
-        "Error: Changelog entry appears to be empty. Please add release notes.",
+        "Error: Changelog entry appears to be empty. Please add release notes."
       );
       process.exit(1);
     }
 
-    // Execute git commands
-    await executeGitCommands(newVersion);
+    console.log("Adding CHANGELOG.md to git...");
+    await $`git add ${changelogPath}`;
+
+    console.log(`Creating commit for version ${newVersion}...`);
+    await $`git commit -m "update changelog for ${newVersion}"`;
+
+    console.log(`Updating package version to ${newVersion}...`);
+    await $`bun pm version ${newVersion}`;
+
+    console.log(`Pushing tag v${newVersion}...`);
+    await $`git push origin tag v${newVersion}`;
+
+    console.log("Pushing to main branch...");
+    await $`git push origin main`;
 
     console.log(`✅ Successfully released version ${newVersion}`);
   } catch (error) {

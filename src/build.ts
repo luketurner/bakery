@@ -5,8 +5,6 @@ import { $ } from "bun";
 import { mkdir } from "fs/promises";
 import { rm } from "fs/promises";
 
-const outdir = "dist";
-
 const targets = [
   "bun-linux-x64",
   "bun-linux-arm64",
@@ -17,7 +15,7 @@ const targets = [
   "bun-darwin-arm64",
 ];
 
-async function buildTarget(target: string) {
+async function buildTarget(target: string, { outdir }: { outdir: string }) {
   const filename = `weave-${target.replace("bun-", "")}`;
   console.log(`Building ${target} into ${outdir}/${filename}...`);
   await $`bun build --define RELEASE=true --compile --minify --sourcemap src/index.tsx --outfile ${outdir}/${filename} --target ${target}`.env(
@@ -39,14 +37,14 @@ async function buildTarget(target: string) {
   }
 }
 
-export async function build(target?: string): Promise<void> {
+export async function build({ outdir, target }: { outdir: string, target?: string }): Promise<void> {
   await rm(outdir, { recursive: true, force: true });
 
   if (target && targets.includes(target)) {
-    await buildTarget(target);
+    await buildTarget(target, { outdir});
   } else {
-    await Promise.all(targets.map(buildTarget));
+    await Promise.all(targets.map((target) => buildTarget(target, { outdir})));
+    await $`bun pm pack --filename ${outdir}/weave-pkg.tar.gz`;
   }
 
-  await $`bun pm pack --filename ${outdir}/weave-pkg.tar.gz`;
 }
