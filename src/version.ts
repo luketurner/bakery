@@ -115,7 +115,7 @@ export async function version(
       process.exit(1);
     }
 
-    console.log("Adding CHANGELOG.md to git...");
+    console.log("Adding changelog to git...");
     await $`git add ${changelogPath}`;
 
     console.log(`Creating commit for version ${newVersion}...`);
