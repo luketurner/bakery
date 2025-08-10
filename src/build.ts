@@ -17,16 +17,6 @@ const targets = [
   "bun-darwin-arm64",
 ];
 
-await rm(outdir, { recursive: true, force: true });
-
-if (targets.includes(process.argv[2]!)) {
-  await buildTarget(process.argv[2]!);
-} else {
-  await Promise.all(targets.map(buildTarget));
-}
-
-await $`bun pm pack --filename ${outdir}/weave-pkg.tar.gz`;
-
 async function buildTarget(target: string) {
   const filename = `weave-${target.replace("bun-", "")}`;
   console.log(`Building ${target} into ${outdir}/${filename}...`);
@@ -47,4 +37,16 @@ async function buildTarget(target: string) {
       outdir,
     );
   }
+}
+
+export async function build(target?: string): Promise<void> {
+  await rm(outdir, { recursive: true, force: true });
+
+  if (target && targets.includes(target)) {
+    await buildTarget(target);
+  } else {
+    await Promise.all(targets.map(buildTarget));
+  }
+
+  await $`bun pm pack --filename ${outdir}/weave-pkg.tar.gz`;
 }

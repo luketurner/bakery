@@ -1,5 +1,3 @@
-#!/usr/bin/env bun
-
 import { $ } from "bun";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
@@ -126,18 +124,10 @@ async function executeGitCommands(newVersion: string) {
   await $`git push origin main`;
 }
 
-async function main() {
+export async function version(versionInput: string): Promise<void> {
   try {
-    const args = process.argv.slice(2);
-
-    if (args.length !== 1) {
-      printUsage();
-      process.exit(1);
-    }
-
-    const versionInput = args[0];
     const currentVersion = getCurrentVersion();
-    const newVersion = calculateNewVersion(currentVersion, versionInput!);
+    const newVersion = calculateNewVersion(currentVersion, versionInput);
 
     console.log(`Current version: ${currentVersion}`);
     console.log(`New version: ${newVersion}`);
@@ -167,5 +157,3 @@ async function main() {
     process.exit(1);
   }
 }
-
-await main();
