@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "bun-release-utils",
+      "name": "bakery",
       "dependencies": {
         "commander": "^14.0.0",
       },

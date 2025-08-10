@@ -1,11 +1,11 @@
-# bun-release-utils
+# bakery
 
 A suite of utilities for building and publishing single-file executables with Bun.
 
 ## Usage
 
 ```
-Usage: bun-release-utils [options] [command]
+Usage: bakery [options] [command]
 
 Options:
   -o, --outdir <dir>       Output directory for binaries, etc. (default: "dist")

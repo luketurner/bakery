@@ -4,7 +4,7 @@ import { release } from "./release";
 import { version } from "./version";
 
 program
-  .name("bun-release-utils")
+  .name("bakery")
   .option("-o, --outdir <dir>", "Output directory for binaries, etc.", "dist")
   .option(
     "--changelog <changelog>",

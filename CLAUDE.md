@@ -1,8 +1,8 @@
-# `CLAUDE.md` - bun-release-utils
+# `CLAUDE.md` - bakery
 
 ## Project Context
 
-`bun-release-utils` is a CLI tool that wraps some common commands for creating Bun single-file packages.
+`bakery` is a CLI tool that wraps some common commands for creating Bun single-file packages.
 
 ## Code Style and Patterns
 
