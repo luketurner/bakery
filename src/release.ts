@@ -2,8 +2,11 @@ import { $ } from "bun";
 import { readFile } from "fs/promises";
 import { getCurrentVersion } from "./util";
 
-export async function release(options: { changelog: string; outdir: string; }): Promise<void> {
-  const currentVersion = getCurrentVersion()
+export async function release(options: {
+  changelog: string;
+  outdir: string;
+}): Promise<void> {
+  const currentVersion = getCurrentVersion();
   const tag = `v${currentVersion}`;
 
   console.log(`Creating release for ${tag}...`);
@@ -21,7 +24,9 @@ export async function release(options: { changelog: string; outdir: string; }): 
     return;
   }
 
-  const notes = (await readFile(options.changelog, "utf-8")).split("\n---\n")[0];
+  const notes = (await readFile(options.changelog, "utf-8")).split(
+    "\n---\n",
+  )[0];
 
   // release doesn't exist -- create it!
   await $`gh release create ${tag} --verify-tag --notes ${notes} -- ${options.outdir}/*.tar.gz ${options.outdir}/*.zip`;

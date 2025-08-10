@@ -37,14 +37,19 @@ async function buildTarget(target: string, { outdir }: { outdir: string }) {
   }
 }
 
-export async function build({ outdir, target }: { outdir: string, target?: string }): Promise<void> {
+export async function build({
+  outdir,
+  target,
+}: {
+  outdir: string;
+  target?: string;
+}): Promise<void> {
   await rm(outdir, { recursive: true, force: true });
 
   if (target && targets.includes(target)) {
-    await buildTarget(target, { outdir});
+    await buildTarget(target, { outdir });
   } else {
-    await Promise.all(targets.map((target) => buildTarget(target, { outdir})));
+    await Promise.all(targets.map((target) => buildTarget(target, { outdir })));
     await $`bun pm pack --filename ${outdir}/weave-pkg.tar.gz`;
   }
-
 }

@@ -25,7 +25,7 @@ function parseVersion(version: string): {
 
 function calculateNewVersion(
   currentVersion: string,
-  versionInput: string
+  versionInput: string,
 ): string {
   if (
     versionInput === "major" ||
@@ -85,7 +85,7 @@ function insertChangelogEntry(newVersion: string, changelogPath: string) {
 
 export async function version(
   versionInput: string,
-  { changelog: changelogPath }: { changelog: string }
+  { changelog: changelogPath }: { changelog: string },
 ): Promise<void> {
   try {
     const currentVersion = getCurrentVersion();
@@ -110,7 +110,7 @@ export async function version(
     const changelog = readFileSync(changelogPath, "utf-8");
     if (changelog.includes(`## ${newVersion}`) && changelog.includes("- \n")) {
       console.error(
-        "Error: Changelog entry appears to be empty. Please add release notes."
+        "Error: Changelog entry appears to be empty. Please add release notes.",
       );
       process.exit(1);
     }
