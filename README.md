@@ -39,3 +39,10 @@ Dependencies:
 Release-specific:
 
 - `gh` (Github CLI)
+
+## Release builds
+
+Release builds are compiled with the following environment changes:
+
+- `--define RELEASE=true`
+- `NODE_ENV=production`
