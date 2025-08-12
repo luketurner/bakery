@@ -1,6 +1,13 @@
 # bakery
 
-A suite of opinionated utilities for building single-file executables with Bun and publishing them as releases on Github.
+A suite of opinionated utilities for building single-file executables with Bun and publishing them as releases on Github:
+
+- `bakery init` -- Scaffold a Github action pipeline and CHANGELOG.md into an existing project.
+- `bakery version` -- automates the process of publishing a new version -- editing changelog, bumping package.json, creating tags, etc.
+- `bakery build` -- Builds one or more single-file executables and compresses them into archives ready for release.
+- `bakery release` -- Creates a Github release with assets created by `bakery build`.
+
+Note that `bakery build` and `bakery release` can be run locally, but in the standard workflow these run in a Github action (automatically created by `bakery init`).
 
 ## Quick start
 
