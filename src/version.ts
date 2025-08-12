@@ -25,7 +25,7 @@ function parseVersion(version: string): {
 
 function calculateNewVersion(
   currentVersion: string,
-  versionInput: string,
+  versionInput: string
 ): string {
   if (
     versionInput === "major" ||
@@ -85,7 +85,17 @@ function insertChangelogEntry(newVersion: string, changelogPath: string) {
 
 export async function version(
   versionInput: string,
-  { changelog: changelogPath }: { changelog: string },
+  {
+    changelog: changelogPath,
+    push,
+    remote,
+    editor: editorOption,
+  }: {
+    changelog: string;
+    push: boolean;
+    remote: string;
+    editor: string | undefined;
+  }
 ): Promise<void> {
   try {
     const currentVersion = getCurrentVersion();
@@ -99,7 +109,7 @@ export async function version(
     console.log("Added changelog template");
 
     // Open editor for user to edit changelog
-    const editor = process.env.EDITOR || "vim";
+    const editor = editorOption || process.env.EDITOR || "vim";
 
     console.log(`Opening ${changelogPath} in ${editor}...`);
 
@@ -110,7 +120,7 @@ export async function version(
     const changelog = readFileSync(changelogPath, "utf-8");
     if (changelog.includes(`## ${newVersion}`) && changelog.includes("- \n")) {
       console.error(
-        "Error: Changelog entry appears to be empty. Please add release notes.",
+        "Error: Changelog entry appears to be empty. Please add release notes."
       );
       process.exit(1);
     }
@@ -124,11 +134,13 @@ export async function version(
     console.log(`Updating package version to ${newVersion}...`);
     await $`bun pm version ${newVersion}`;
 
-    console.log(`Pushing tag v${newVersion}...`);
-    await $`git push origin tag v${newVersion}`;
+    if (push) {
+      console.log(`Pushing tag v${newVersion}...`);
+      await $`git push ${remote} tag v${newVersion}`;
 
-    console.log("Pushing to main branch...");
-    await $`git push origin main`;
+      console.log("Pushing to main branch...");
+      await $`git push ${remote} main`;
+    }
 
     console.log(`✅ Successfully released version ${newVersion}`);
   } catch (error) {

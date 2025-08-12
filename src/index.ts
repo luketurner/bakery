@@ -10,7 +10,7 @@ program
   .option(
     "--changelog <changelog>",
     "Location of changelog file",
-    "CHANGELOG.md",
+    "CHANGELOG.md"
   );
 
 program
@@ -18,7 +18,7 @@ program
   .description("Set up project")
   .option("--skip-install", "Skip automatic bakery installation", false)
 
-  .action(async function ({ skipInstall }: { skipInstall: string }) {
+  .action(async function ({ skipInstall }: { skipInstall: boolean }) {
     await init({ skipInstall });
   });
 
@@ -27,12 +27,29 @@ program
   .description("Publish a new version")
   .argument(
     "<version>",
-    "Version number (e.g., 2.3.0) or increment type (major, minor, patch)",
+    "Version number (e.g., 2.3.0) or increment type (major, minor, patch)"
   )
-  .action(async function (versionArg: string) {
+  .option("-p, --push", "Push tag and branch to origin remote", false)
+  .option("-r, --remote <remote>", "Which remote to push to", "origin")
+  .option(
+    "-e, --editor <editor>",
+    "Editor to use (e.g. vim). If not set, the EDITOR variable will be used. If that's not set either, defaults to vim.",
+    undefined
+  )
+  .action(async function (
+    versionArg: string,
+    {
+      push,
+      remote,
+      editor,
+    }: { push: boolean; remote: string; editor: string | undefined }
+  ) {
     const { changelog } = this.parent?.opts()!;
     await version(versionArg, {
       changelog,
+      push,
+      remote,
+      editor,
     });
   });
 
@@ -41,11 +58,29 @@ program
   .description("Build single-file executable(s)")
   .option(
     "-t, --target <target>",
-    "Specific target to build (e.g., bun-linux-x64)",
+    "Specific target to build (e.g., bun-linux-x64)"
   )
-  .action(async function ({ target }: { target?: string }) {
+  .option(
+    "-p, --build-package",
+    "Builds an npm tarball in addition to single-file binaries",
+    false
+  )
+  .option(
+    "--skip-compress",
+    "Skips creating compressed archives (*.tar.gz and *.zip)",
+    false
+  )
+  .action(async function ({
+    target,
+    buildPackage,
+    skipCompress,
+  }: {
+    target?: string;
+    buildPackage: boolean;
+    skipCompress: boolean;
+  }) {
     const { outdir } = this.parent?.opts()!;
-    await build({ outdir, target });
+    await build({ outdir, target, buildPackage, skipCompress });
   });
 
 program
