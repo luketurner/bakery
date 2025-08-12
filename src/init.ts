@@ -1,6 +1,6 @@
 import { $ } from "bun";
 import { getPackageJson, updatePackageJson } from "./util";
-import { existsSync, writeFileSync } from "fs";
+import { existsSync } from "fs";
 
 const actionYaml = `
 name: publish-release
