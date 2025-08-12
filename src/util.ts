@@ -12,7 +12,7 @@ export function updatePackageJson(newJson: any) {
   );
 }
 
-export function getCurrentVersion() {
+export function getCurrentVersion(): string {
   const currentVersion = getPackageJson()?.version;
   if (!currentVersion) {
     throw new Error("Must specify version in package.json");

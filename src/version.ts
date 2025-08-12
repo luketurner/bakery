@@ -23,15 +23,13 @@ function parseVersion(version: string): {
   return { major: major!, minor: minor!, patch: patch! };
 }
 
-function calculateNewVersion(
-  currentVersion: string,
-  versionInput: string
-): string {
+function calculateNewVersion(versionInput: string): string {
   if (
     versionInput === "major" ||
     versionInput === "minor" ||
     versionInput === "patch"
   ) {
+    const currentVersion = getCurrentVersion();
     const { major, minor, patch } = parseVersion(currentVersion);
 
     switch (versionInput) {
@@ -106,10 +104,7 @@ export async function version(
       );
     }
 
-    const currentVersion = getCurrentVersion();
-    const newVersion = calculateNewVersion(currentVersion, versionInput);
-
-    console.log(`Current version: ${currentVersion}`);
+    const newVersion = calculateNewVersion(versionInput);
     console.log(`New version: ${newVersion}`);
 
     // Insert the changelog template
