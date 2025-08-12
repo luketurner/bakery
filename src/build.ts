@@ -70,7 +70,7 @@ export async function build({
   await rm(outdir, { recursive: true, force: true });
 
   if (target && targets.includes(target)) {
-    await buildTarget(target, { outdir, skipCompress, entrypoint });
+    await buildTarget(target, { outdir, skipCompress, entrypoint, name });
   } else {
     await Promise.all(
       targets.map((target) => buildTarget(target, { outdir, skipCompress, entrypoint, name })),
