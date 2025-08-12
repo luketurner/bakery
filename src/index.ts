@@ -19,7 +19,8 @@ program
   .option("--skip-install", "Skip automatic bakery installation", false)
 
   .action(async function ({ skipInstall }: { skipInstall: boolean }) {
-    await init({ skipInstall });
+    const { changelog } = this.parent?.opts()!;
+    await init({ skipInstall, changelog });
   });
 
 program

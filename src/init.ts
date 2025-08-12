@@ -25,7 +25,12 @@ jobs:
           GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
 `;
 
-export async function init(options: { skipInstall: boolean }) {
+const changelogMd = "# Changelog\n\n";
+
+export async function init(options: {
+  skipInstall: boolean;
+  changelog: string;
+}) {
   const packageJson = getPackageJson();
   if (!packageJson) {
     throw new Error("Invalid package.json");
@@ -39,8 +44,15 @@ export async function init(options: { skipInstall: boolean }) {
   }
 
   if (!existsSync(".github/workflows/publish.yml")) {
-    console.log("Creating github workflow...");
+    console.log("Creating .github/workflows/publish.yml...");
     await Bun.write(".github/workflows/publish.yml", actionYaml, {
+      createPath: true,
+    });
+  }
+
+  if (!existsSync(options.changelog)) {
+    console.log(`Creating ${options.changelog}`);
+    await Bun.write(options.changelog, changelogMd, {
       createPath: true,
     });
   }
