@@ -17,14 +17,14 @@ const targets = [
 
 async function buildTarget(
   target: string,
-  { outdir, skipCompress }: { outdir: string; skipCompress: boolean }
+  { outdir, skipCompress }: { outdir: string; skipCompress: boolean },
 ) {
   const filename = `weave-${target.replace("bun-", "")}`;
   console.log(`Building ${target} into ${outdir}/${filename}...`);
   await $`bun build --define RELEASE=true --compile --minify --sourcemap src/index.tsx --outfile ${outdir}/${filename} --target ${target}`.env(
     {
       NODE_ENV: "production",
-    }
+    },
   );
   if (skipCompress) return;
   if (target === "bun-windows-x64") {
@@ -36,7 +36,7 @@ async function buildTarget(
     await rm(`${outdir}/${filename}`, { recursive: true });
   } else {
     await $`tar -czf ${filename}.tar.gz --transform='s/${filename}/weave/' ${filename}`.cwd(
-      outdir
+      outdir,
     );
   }
 }
@@ -58,7 +58,7 @@ export async function build({
     await buildTarget(target, { outdir, skipCompress });
   } else {
     await Promise.all(
-      targets.map((target) => buildTarget(target, { outdir, skipCompress }))
+      targets.map((target) => buildTarget(target, { outdir, skipCompress })),
     );
   }
 
