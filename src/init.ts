@@ -26,13 +26,18 @@ jobs:
 `;
 
 export async function init(options: { skipInstall: boolean }) {
-  if (!options.skipInstall) {
-    await $`bun add git+https://github.com/luketurner/bakery.git`;
-  }
   const packageJson = getPackageJson();
   if (!packageJson) {
     throw new Error("Invalid package.json");
   }
+
+  if (
+    !options.skipInstall &&
+    !(packageJson.dependencies.bakery || packageJson.devDependencies.bakery)
+  ) {
+    await $`bun add --dev git+https://github.com/luketurner/bakery.git`;
+  }
+
   if (!packageJson.scripts?.bakery) {
     console.log("Adding bakery command to package.json...");
     if (!packageJson.scripts) {
