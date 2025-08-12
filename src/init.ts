@@ -1,6 +1,6 @@
 import { $ } from "bun";
 import { getPackageJson, updatePackageJson } from "./util";
-import { existsSync } from "fs";
+import { appendFileSync, existsSync, readFileSync } from "fs";
 
 const actionYaml = `
 name: publish-release
@@ -30,6 +30,7 @@ const changelogMd = "# Changelog\n\n";
 export async function init(options: {
   skipInstall: boolean;
   changelog: string;
+  outdir: string;
 }) {
   const packageJson = getPackageJson();
   if (!packageJson) {
@@ -55,5 +56,15 @@ export async function init(options: {
     await Bun.write(options.changelog, changelogMd, {
       createPath: true,
     });
+  }
+
+  if (existsSync(".gitignore")) {
+    if (!readFileSync(".gitignore", "utf-8").includes(options.outdir)) {
+      console.log(`Adding ${options.outdir} to gitignore...`);
+      appendFileSync(".gitignore", `\n# Bakery\n${options.outdir}\n`);
+    }
+  } else {
+    console.log(`Creating .gitignore with ${options.outdir}...`);
+    await Bun.write(".gitignore", `\n# Bakery\n${options.outdir}\n\n`);
   }
 }
