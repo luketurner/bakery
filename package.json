@@ -1,6 +1,9 @@
 {
   "name": "bakery",
   "module": "src/index.ts",
+  "bin": {
+    "bakery": "./bin/bakery"
+  },
   "dependencies": {
     "commander": "^14.0.0"
   },
