@@ -38,15 +38,6 @@ export async function init(options: { skipInstall: boolean }) {
     await $`bun add --dev git+https://github.com/luketurner/bakery.git`;
   }
 
-  if (!packageJson.scripts?.bakery) {
-    console.log("Adding bakery command to package.json...");
-    if (!packageJson.scripts) {
-      packageJson.scripts = {};
-    }
-    packageJson.scripts.bakery = "bakery";
-    updatePackageJson(packageJson);
-  }
-
   if (!existsSync(".github/workflows/publish.yml")) {
     console.log("Creating github workflow...");
     await Bun.write(".github/workflows/publish.yml", actionYaml, {
