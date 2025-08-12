@@ -18,5 +18,6 @@
     "compile": "tsc",
     "format": "prettier --write ."
   },
-  "type": "module"
+  "type": "module",
+  "version": "0.0.1"
 }
