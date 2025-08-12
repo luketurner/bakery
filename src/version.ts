@@ -25,7 +25,7 @@ function parseVersion(version: string): {
 
 function calculateNewVersion(
   currentVersion: string,
-  versionInput: string,
+  versionInput: string
 ): string {
   if (
     versionInput === "major" ||
@@ -95,14 +95,14 @@ export async function version(
     push: boolean;
     remote: string;
     editor: string | undefined;
-  },
+  }
 ): Promise<void> {
   try {
     // Check if Git working directory is clean
     const gitStatus = await $`git status --porcelain`.text();
     if (gitStatus.trim()) {
       throw new Error(
-        "Git working directory is not clean. Please commit or stash your changes before versioning.",
+        "Git working directory is not clean. Please commit or stash your changes before versioning."
       );
     }
 
@@ -128,7 +128,7 @@ export async function version(
     const changelog = readFileSync(changelogPath, "utf-8");
     if (changelog.includes(`## ${newVersion}`) && changelog.includes("- \n")) {
       console.error(
-        "Error: Changelog entry appears to be empty. Please add release notes.",
+        "Error: Changelog entry appears to be empty. Please add release notes."
       );
       process.exit(1);
     }
@@ -146,8 +146,8 @@ export async function version(
       console.log(`Pushing tag v${newVersion}...`);
       await $`git push ${remote} tag v${newVersion}`;
 
-      console.log("Pushing to main branch...");
-      await $`git push ${remote} main`;
+      console.log("Pushing to origin...");
+      await $`git push ${remote}`;
     }
 
     console.log(`✅ Successfully released version ${newVersion}`);
