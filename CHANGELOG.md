@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.3 (2025-08-16)
+
+- remove leading newline in action yaml
+
+---
+
 ## 0.0.2 (2025-08-16)
 
 - Don't error if dependencies/devDependencies are undefined
