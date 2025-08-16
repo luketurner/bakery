@@ -39,7 +39,7 @@ export async function init(options: {
 
   if (
     !options.skipInstall &&
-    !(packageJson.dependencies.bakery || packageJson.devDependencies.bakery)
+    !(packageJson.dependencies?.bakery || packageJson.devDependencies?.bakery)
   ) {
     await $`bun add --dev git+https://github.com/luketurner/bakery.git`;
   }
