@@ -1,9 +1,8 @@
 import { $ } from "bun";
-import { getPackageJson, updatePackageJson } from "./util";
+import { getPackageJson } from "./util";
 import { appendFileSync, existsSync, readFileSync } from "fs";
 
-const actionYaml = `
-name: publish-release
+const actionYaml = `name: publish-release
 run-name: Publish Release
 on:
   push:
