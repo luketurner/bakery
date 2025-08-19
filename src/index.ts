@@ -3,6 +3,7 @@ import { build } from "./build";
 import { release } from "./release";
 import { version } from "./version";
 import { init } from "./init";
+import { publish } from "./publish";
 
 program
   .name("bakery")
@@ -90,6 +91,18 @@ program
   .action(async function () {
     const { changelog, outdir } = this.parent?.opts()!;
     await release({ changelog, outdir });
+  });
+
+program
+  .command("publish")
+  .description("Publish package to NPM")
+  .option(
+    "--access <access>",
+    "Whether the package is public or restricted",
+    "public",
+  )
+  .action(async function ({ access }: { access: "public" | "restricted" }) {
+    await publish({ access });
   });
 
 const cmd = await program.parseAsync();
