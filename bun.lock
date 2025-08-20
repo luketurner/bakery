@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "bakery",
+      "name": "@luketurner/bakery",
       "dependencies": {
         "commander": "^14.0.0",
       },

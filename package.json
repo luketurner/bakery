@@ -1,5 +1,5 @@
 {
-  "name": "bakery",
+  "name": "@luketurner/bakery",
   "module": "src/index.ts",
   "bin": {
     "bakery": "./bin/bakery"
