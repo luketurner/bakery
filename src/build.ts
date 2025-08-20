@@ -18,7 +18,17 @@ const targets = [
 
 async function buildTarget(
   target: string,
-  { outdir, skipCompress, entrypoint, name }: { outdir: string; skipCompress: boolean; entrypoint: string; name: string; },
+  {
+    outdir,
+    skipCompress,
+    entrypoint,
+    name,
+  }: {
+    outdir: string;
+    skipCompress: boolean;
+    entrypoint: string;
+    name: string;
+  },
 ) {
   const filename = `${name}-${target.replace("bun-", "")}`;
   console.log(`Building ${target} into ${outdir}/${filename}...`);
@@ -53,19 +63,17 @@ export async function build({
   buildPackage: boolean;
   skipCompress: boolean;
 }): Promise<void> {
-
   const packageJson = getPackageJson();
 
   const entrypoint: string | undefined = getPackageJson().module;
   if (!entrypoint) {
-    throw new Error('Must specify module in package.json');
+    throw new Error("Must specify module in package.json");
   }
 
   const name: string | undefined = getPackageJson().name;
   if (!name) {
-    throw new Error('Must specify name in package.json');
+    throw new Error("Must specify name in package.json");
   }
-
 
   await rm(outdir, { recursive: true, force: true });
 
@@ -73,7 +81,9 @@ export async function build({
     await buildTarget(target, { outdir, skipCompress, entrypoint, name });
   } else {
     await Promise.all(
-      targets.map((target) => buildTarget(target, { outdir, skipCompress, entrypoint, name })),
+      targets.map((target) =>
+        buildTarget(target, { outdir, skipCompress, entrypoint, name }),
+      ),
     );
   }
 
