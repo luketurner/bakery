@@ -12,6 +12,14 @@ export function updatePackageJson(newJson: any) {
   );
 }
 
+export function getPackageName(): string {
+  const name = getPackageJson()?.name;
+  if (!name) {
+    throw new Error("Must specify name in package.json");
+  }
+  return name;
+}
+
 export function getCurrentVersion(): string {
   const currentVersion = getPackageJson()?.version;
   if (!currentVersion) {
