@@ -10,10 +10,10 @@ async function isVersionPublished(
   version: string,
 ): Promise<boolean> {
   try {
-    const result = await $`npm view ${packageName}@${version} version`.quiet();
+    const result = await $`bun info ${packageName}@${version} version`.quiet();
     return result.text().trim() === version;
   } catch (error) {
-    // If npm view fails, the version doesn't exist
+    // If view fails, the version doesn't exist
     return false;
   }
 }
@@ -31,9 +31,9 @@ export async function publish(options: PublishOptions) {
 
   try {
     if (access) {
-      await $`npm publish --access ${access}`;
+      await $`bun publish --access ${access}`;
     } else {
-      await $`npm publish`;
+      await $`bun publish`;
     }
     console.log(`✅ ${packageName}@${currentVersion} published successfully`);
   } catch (error) {
