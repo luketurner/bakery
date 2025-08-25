@@ -26,6 +26,9 @@ Release-specific:
 bun add --dev @luketurner/bakery
 bun run bakery init
 
+# Or, use bunx:
+bunx @luketurner/bakery init
+
 # Optional -- test build
 bun run bakery build
 
