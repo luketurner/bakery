@@ -24,7 +24,7 @@ jobs:
           GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
       - run: "bun run bakery publish"
         env:
-          NPM_TOKEN: \${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_TOKEN: \${{ secrets.NPM_CONFIG_TOKEN }}
 `;
 
 const changelogMd = "# Changelog\n\n";
