@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 (2025-08-25)
+
+- Fix issue in build command when package names have scope
+
+---
+
 ## 0.1.0 (2025-08-25)
 
 - Rename package to @luketurner/bakery
