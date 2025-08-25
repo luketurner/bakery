@@ -22,10 +22,8 @@ Release-specific:
 - `gh` (Github CLI)
 
 ```bash
-# Install bakery
-bun add --dev git+https://github.com/luketurner/bakery.git
-
-# Create Github actions, changelog, etc.
+# Install bakery and init
+bun add --dev @luketurner/bakery
 bun run bakery init
 
 # Optional -- test build
