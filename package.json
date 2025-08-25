@@ -12,7 +12,6 @@
     "prettier": "^3.6.2",
     "typescript": "^5.9.2"
   },
-  "private": true,
   "scripts": {
     "dev": "bun run src/index.ts",
     "compile": "tsc",
