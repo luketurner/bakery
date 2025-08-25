@@ -4,7 +4,7 @@
 import { $ } from "bun";
 import { mkdir } from "fs/promises";
 import { rm } from "fs/promises";
-import { getPackageJson } from "./util";
+import { getPackageJson, getPackageName } from "./util";
 
 const targets = [
   "bun-linux-x64",
@@ -63,17 +63,12 @@ export async function build({
   buildPackage: boolean;
   skipCompress: boolean;
 }): Promise<void> {
-  const packageJson = getPackageJson();
-
   const entrypoint: string | undefined = getPackageJson().module;
   if (!entrypoint) {
     throw new Error("Must specify module in package.json");
   }
 
-  const name: string | undefined = getPackageJson().name;
-  if (!name) {
-    throw new Error("Must specify name in package.json");
-  }
+  const name: string = getPackageName({ includeScope: false });
 
   await rm(outdir, { recursive: true, force: true });
 

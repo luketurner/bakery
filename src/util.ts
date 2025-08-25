@@ -12,10 +12,13 @@ export function updatePackageJson(newJson: any) {
   );
 }
 
-export function getPackageName(): string {
+export function getPackageName({ includeScope = true }: { includeScope?: boolean } = { includeScope: true }): string {
   const name = getPackageJson()?.name;
   if (!name) {
     throw new Error("Must specify name in package.json");
+  }
+  if (!includeScope && name.startsWith('@')) {
+    return name.replace(/^@[^/]+\//, '');
   }
   return name;
 }
