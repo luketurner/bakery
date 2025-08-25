@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 (2025-08-25)
+
+- Update init command to use npm package instead of github repo
+
+---
+
 ## 0.1.1 (2025-08-25)
 
 - Fix issue in build command when package names have scope
