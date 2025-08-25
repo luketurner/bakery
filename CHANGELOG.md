@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0 (2025-08-25)
+
+- Rename package to @luketurner/bakery
+- Add NPM publishing functionality
+
+---
+
 ## 0.0.3 (2025-08-16)
 
 - remove leading newline in action yaml
