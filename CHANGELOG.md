@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 (2025-08-25)
+
+- update init command to use `NPM_CONFIG_TOKEN` instead of `NPM_TOKEN`
+
+---
+
 ## 0.1.2 (2025-08-25)
 
 - Update init command to use npm package instead of github repo
